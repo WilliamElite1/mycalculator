@@ -41,12 +41,20 @@ export default function App() {
 
   const equalClickHandler = (e) => {
     e.preventDefault();
-
+  
     try {
+      // eslint-disable-next-line
       const result = eval(expression);
-      setDisp(result.toString());
-      setExpression(result.toString());
-      setResetDisplay(true);
+  
+      if (result === Infinity || result === -Infinity) {
+        setDisp("You can't divide a number with 0, you dumbfuck.");
+        setExpression("");
+        setResetDisplay(false);
+      } else {
+        setDisp(result.toString());
+        setExpression(result.toString());
+        setResetDisplay(true);
+      }
     } catch (error) {
       setDisp("ERROR");
       setExpression("");
