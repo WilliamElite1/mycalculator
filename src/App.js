@@ -21,15 +21,23 @@ export default function App() {
   const [Display, setDisp] = useState("0");
   const [expression, setExpression] = useState("");
   const [resetDisplay, setResetDisplay] = useState(false);
+  // eslint-disable-next-line
+  const [quiambaoClicked, setQuiambaoClicked] = useState(false); // New state variable
 
   const handleButtonClick = (value) => {
     if (resetDisplay) {
       setExpression("");
       setResetDisplay(false);
     }
-
-    setExpression((prevExpression) => prevExpression + value);
-    setDisp((prevDisplay) => (prevDisplay === "0" ? value : prevDisplay + value));
+//Fixes the repitition even if clicked repeatedly.
+    if (value === "Quiambao") {
+      setQuiambaoClicked(true);
+      setDisp("Quiambao");
+      setExpression("Quiambao");
+    } else {
+      setExpression((prevExpression) => prevExpression + value);
+      setDisp((prevDisplay) => (prevDisplay === "0" ? value : prevDisplay + value));
+    }
   };
 
   const clearClickHandler = (e) => {
@@ -37,6 +45,7 @@ export default function App() {
     setDisp("0");
     setExpression("");
     setResetDisplay(false);
+    setQuiambaoClicked(false);
   };
 
   const equalClickHandler = (e) => {
@@ -47,7 +56,7 @@ export default function App() {
       const result = eval(expression);
   
       if (result === Infinity || result === -Infinity) {
-        setDisp("You can't divide a number with 0, you dumbfuck.");
+        setDisp("You can't divide a number with 0.");
         setExpression("");
         setResetDisplay(false);
       } else {
@@ -59,6 +68,7 @@ export default function App() {
       setDisp("ERROR");
       setExpression("");
       setResetDisplay(false);
+      setQuiambaoClicked(false);
     }
   };
 
@@ -87,7 +97,7 @@ export default function App() {
             <CalcuButton label={"/"} onClick={() => handleButtonClick("/")} buttonClassName={"OperatorButton"} />
           </div>
           <div className="NameButton">
-            <CalcuButton label={"Quiambao"} onClick={() => handleButtonClick("Christian Anthony Quiambao")} buttonClassName={"CalcuButtonName"} />
+            <CalcuButton label={"Quiambao"} onClick={() => handleButtonClick("Quiambao")} buttonClassName={"CalcuButtonName"} />
           </div>
         </div>
       </div>
