@@ -22,7 +22,7 @@ export default function App() {
   const [expression, setExpression] = useState("");
   const [resetDisplay, setResetDisplay] = useState(false);
   // eslint-disable-next-line
-  const [quiambaoClicked, setQuiambaoClicked] = useState(false); // New state variable
+  const [quiambaoClicked, setQuiambaoClicked] = useState(false);
 
   const handleButtonClick = (value) => {
     if (resetDisplay) {
