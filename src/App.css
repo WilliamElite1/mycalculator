@@ -1,122 +1,106 @@
-.App {
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-color: #ffffff;
-  font-family: 'Trebuchet MS', sans-serif; 
+import React, { useState } from 'react';
+import './App.css';
+
+function CalcuButton({ label, onClick, buttonClassName = "CalcuButton" }) {
+  return (
+    <button className={buttonClassName} onClick={onClick}>
+      {label}
+    </button>
+  );
 }
 
-.CalcContainer {
-  border-radius: 10px; 
-  padding: 20px;
-  text-align: center;
-  height: 500px;
-  width: 500px; 
+function CalcuDisplay({ Display }) {
+  return (
+    <div className="CalcuDisplay">
+      {Display}
+    </div>
+  );
 }
 
-.CalcContainer h1 {
-  color: #333; 
-  font-size: 28px; 
-  margin-bottom: 20px;
-}
+export default function App() {
+  const [Display, setDisp] = useState("0");
+  const [expression, setExpression] = useState("");
+  const [resetDisplay, setResetDisplay] = useState(false);
+  // eslint-disable-next-line
+  const [quiambaoClicked, setQuiambaoClicked] = useState(false); // New state variable
 
+  const handleButtonClick = (value) => {
+    if (resetDisplay) {
+      setExpression("");
+      setResetDisplay(false);
+    }
+//Fixes the repitition even if clicked repeatedly.
+    if (value === "Quiambao") {
+      setQuiambaoClicked(true);
+      setDisp("Quiambao");
+      setExpression("Quiambao");
+    } else {
+      setExpression((prevExpression) => prevExpression + value);
+      setDisp((prevDisplay) => (prevDisplay === "0" ? value : prevDisplay + value));
+    }
+  };
 
-.CalcuDisplay {
-  background-color: #333; 
-  border: 1px solid #555; 
-  font-size: 25px; 
-  padding: 10px;
-  margin-bottom: 20px;
-  margin-left: -10px;
-  color: white;
-  width: 100%;
-}
+  const clearClickHandler = (e) => {
+    e.preventDefault();
+    setDisp("0");
+    setExpression("");
+    setResetDisplay(false);
+    setQuiambaoClicked(false);
+  };
 
-.ButtonContainer {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-}
-.CalcuButtonNum{
+  const equalClickHandler = (e) => {
+    e.preventDefault();
+  
+    try {
+      // eslint-disable-next-line
+      const result = eval(expression);
+  
+      if (result === Infinity || result === -Infinity) {
+        setDisp("You can't divide a number with 0.");
+        setExpression("");
+        setResetDisplay(false);
+      } else {
+        setDisp(result.toString());
+        setExpression(result.toString());
+        setResetDisplay(true);
+      }
+    } catch (error) {
+      setDisp("ERROR");
+      setExpression("");
+      setResetDisplay(false);
+      setQuiambaoClicked(false);
+    }
+  };
 
-  font-size: 35px;
-}
-
-.CalcuButton {
-  background-color: #e0e0e0; 
-  border: 1px solid #ccc; 
-  border-radius: 5px;
-  color: #333;
-  cursor: pointer;
-  font-size: 28px; 
-  padding: 20px 0;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-  transition: background-color 0.2s, transform 0.1s;
-}
-
-.CalcuButton:hover {
-  background-color: #ccc; 
-  transform: scale(1.05); 
-}
-
-.OperatorButton {
-  background-color: black;
-  color: #fff;
-  font-weight: bold; 
-}
-
-.EqualsButton {
-  background-color: #4285f4;
-  color: #fff;
-  font-weight: bold;
-}
-
-.CalcuButtonName {
-  background-color: #555;
-  border: 1px solid #357ae8;
-  margin-top: 2.5%;
-  color: white;
-  font-size: 24px;
-  padding: 20px 0;
-  border-radius: 5px;
-  width: 100%; 
-}
-
-body {
-  background: #000;
-  display: grid;
-  place-items: center;
-  min-height: 100vh;
-}
-
-@property --angle {
-  syntax: "<angle>";
-  initial-value: 0deg;
-  inherits: false;
-}
-
-.moving-border {
-  width: 543px;
-  height: 540px;
-  position: relative;
-  background: #111;
-  padding: 4px;
-}
-.moving-border::before,
-.moving-border::after {
-  content: "";
-  position: absolute;
-  inset: -0.2rem;
-  z-index: -1;
-  background: linear-gradient(var(--angle), 
-    #032146,  #C3F2FF, #b00);
-  animation: rotate 2s linear infinite;
-}
-.moving-border::after {
-  filter: blur(10px);
-}
-@keyframes rotate {
-  0%     { --angle: 0deg; }
-  100%   { --angle: 360deg;
-  }
+  return (
+    <div className="moving-border">
+      <div className="App">
+        <div className="CalcContainer">
+          <h1>Calculator of Christian Anthony S. Quiambao - IT3A</h1>
+          <CalcuDisplay Display={Display} />
+          <div className="ButtonContainer">
+            <CalcuButton label={7} onClick={() => handleButtonClick("7")} buttonClassName={"CalcuButtonNum"} />
+            <CalcuButton label={8} onClick={() => handleButtonClick("8")} buttonClassName={"CalcuButtonNum"} />
+            <CalcuButton label={9} onClick={() => handleButtonClick("9")} buttonClassName={"CalcuButtonNum"} />
+            <CalcuButton label={"+"} onClick={() => handleButtonClick("+")} buttonClassName={"OperatorButton"} />
+            <CalcuButton label={4} onClick={() => handleButtonClick("4")} buttonClassName={"CalcuButtonNum"} />
+            <CalcuButton label={5} onClick={() => handleButtonClick("5")} buttonClassName={"CalcuButtonNum"} />
+            <CalcuButton label={6} onClick={() => handleButtonClick("6")} buttonClassName={"CalcuButtonNum"} />
+            <CalcuButton label={"-"} onClick={() => handleButtonClick("-")} buttonClassName={"OperatorButton"} />
+            <CalcuButton label={1} onClick={() => handleButtonClick("1")} buttonClassName={"CalcuButtonNum"} />
+            <CalcuButton label={2} onClick={() => handleButtonClick("2")} buttonClassName={"CalcuButtonNum"} />
+            <CalcuButton label={3} onClick={() => handleButtonClick("3")} buttonClassName={"CalcuButtonNum"} />
+            <CalcuButton label={"*"} onClick={() => handleButtonClick("*")} buttonClassName={"OperatorButton"} />
+            <CalcuButton label={"C"} onClick={clearClickHandler} buttonClassName={"OperatorButton"} />
+            <CalcuButton label={"0"} onClick={() => handleButtonClick("0")} buttonClassName={"CalcuButtonNum"} />
+            <CalcuButton label={"="} onClick={equalClickHandler} buttonClassName={"OperatorButton"} />
+            <CalcuButton label={"/"} onClick={() => handleButtonClick("/")} buttonClassName={"OperatorButton"} />
+          </div>
+          <div className="NameButton">
+            <CalcuButton label={"Quiambao"} onClick={() => handleButtonClick("Quiambao")} buttonClassName={"CalcuButtonName"} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
